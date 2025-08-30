@@ -13,6 +13,16 @@ Before starting, make sure you have:
 
 ## 🛠️ Option 1: DigitalOcean App Platform (Recommended)
 
+### 🔄 Deployment Process Overview
+
+The deployment happens in this order:
+
+1. **Deploy first** → Get your app URLs
+2. **Configure environment variables** with the actual URLs
+3. **Redeploy** → App works correctly
+
+This is because DigitalOcean generates random URLs that you can't predict beforehand.
+
 ### Step 1: Prepare Your Repository
 
 1. **Push your code to GitHub/GitLab:**
@@ -23,24 +33,16 @@ Before starting, make sure you have:
    git push origin main
    ```
 
-2. **Create environment files:**
+2. **Initial Push (without environment variables):**
 
-   **Frontend (.env.production):**
-
-   ```env
-   VITE_ANALYTICS_URL=https://your-app-name.ondigitalocean.app
-   VITE_TMDB_API_KEY=374ed57246cdd0d51e7f9c7eb9e682f0
-   VITE_TMDB_BASE_URL=https://api.themoviedb.org/3
+   ```bash
+   # First, push your code without production environment variables
+   git add .
+   git commit -m "Initial deployment setup"
+   git push origin main
    ```
 
-   **Backend (.env):**
-
-   ```env
-   NODE_ENV=production
-   PORT=8080
-   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/streamin-analytics
-   ALLOWED_ORIGINS=https://your-frontend-domain.com,https://your-app-name.ondigitalocean.app
-   ```
+   **Note:** We'll configure environment variables AFTER creating the app, when we know the actual URLs.
 
 ### Step 2: Set Up MongoDB Atlas (Free Tier)
 
@@ -93,22 +95,38 @@ Before starting, make sure you have:
    environment_slug: node-js
    ```
 
-4. **Set Environment Variables:**
+4. **Initial Deploy (without environment variables):**
 
-   **For Backend:**
-
-   - `NODE_ENV` = `production`
-   - `MONGODB_URI` = `your-mongodb-connection-string`
-   - `ALLOWED_ORIGINS` = `https://your-frontend-url`
-
-   **For Frontend:**
-
-   - `VITE_ANALYTICS_URL` = `https://your-backend-url`
-
-5. **Deploy:**
    - Review settings
    - Click "Create Resources"
    - Wait for deployment (5-10 minutes)
+   - **Note:** The app will initially fail because environment variables are missing - this is expected!
+
+5. **Get Your App URLs:**
+   After deployment, you'll get URLs like:
+
+   - Frontend: `https://streamin-frontend-abc123.ondigitalocean.app`
+   - Backend: `https://streamin-backend-abc123.ondigitalocean.app`
+
+6. **Configure Environment Variables:**
+
+   Go to your app settings → "Components" → Select each component → "Environment Variables"
+
+   **For Backend Component:**
+
+   - `NODE_ENV` = `production`
+   - `MONGODB_URI` = `your-mongodb-connection-string`
+   - `ALLOWED_ORIGINS` = `https://streamin-frontend-abc123.ondigitalocean.app` (use your actual frontend URL)
+
+   **For Frontend Component:**
+
+   - `VITE_ANALYTICS_URL` = `https://streamin-backend-abc123.ondigitalocean.app` (use your actual backend URL)
+   - `VITE_TMDB_API_KEY` = `374ed57246cdd0d51e7f9c7eb9e682f0`
+   - `VITE_TMDB_BASE_URL` = `https://api.themoviedb.org/3`
+
+7. **Redeploy:**
+   - After setting environment variables, trigger a new deployment
+   - Your app should now work correctly!
 
 ### Step 4: Configure Domain (Optional)
 
