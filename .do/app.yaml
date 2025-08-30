@@ -1,0 +1,21 @@
+name: streamin-frontend
+services:
+- name: web
+  source_dir: /
+  github:
+    repo: your-username/your-repo-name
+    branch: main
+  build_command: npm install && npm run build
+  run_command: npm start
+  environment_slug: node-js
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  routes:
+  - path: /
+  envs:
+  - key: VITE_ANALYTICS_URL
+    value: https://streamin-server-feyfo.ondigitalocean.app
+  - key: VITE_TMDB_API_KEY
+    value: 374ed57246cdd0d51e7f9c7eb9e682f0
+  - key: VITE_TMDB_BASE_URL
+    value: https://api.themoviedb.org/3
