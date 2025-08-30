@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const helmet = require("helmet");
+const dotenv = require("dotenv");
 const rateLimit = require("express-rate-limit");
 const geoip = require("geoip-lite");
 const useragent = require("express-useragent");
@@ -10,6 +11,7 @@ const { v4: uuidv4 } = require("uuid");
 const app = express();
 const PORT = process.env.PORT || 8080;
 const path = require("path");
+dotenv.config();
 
 // Middleware
 app.use(helmet());
@@ -356,7 +358,7 @@ app.get("/health", (req, res) => {
 if (process.env.NODE_ENV === "production") {
   // Serve static files
   app.use(express.static(path.join(__dirname, "../dist")));
-  
+
   // Handle React Router - serve index.html for all routes
   app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "../dist", "index.html"));
