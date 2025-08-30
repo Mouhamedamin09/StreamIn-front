@@ -63,7 +63,7 @@ const AdminDashboard: React.FC = () => {
   const [realtimeData, setRealtimeData] = useState<RealtimeData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const API_BASE = "http://localhost:8080/api/admin";
+  const API_BASE = "https://streamin-server-feyfo.ondigitalocean.app/api/admin";
 
   useEffect(() => {
     fetchDashboardData();

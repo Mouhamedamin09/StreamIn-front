@@ -7,7 +7,8 @@ class Analytics {
   constructor() {
     // Use environment variable or default to local development
     this.baseURL =
-      import.meta.env.VITE_ANALYTICS_URL || "http://localhost:8080";
+      import.meta.env.VITE_ANALYTICS_URL ||
+      "https://streamin-server-feyfo.ondigitalocean.app";
     this.initSession();
   }
 
