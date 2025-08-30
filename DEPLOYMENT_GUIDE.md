@@ -595,8 +595,18 @@ sudo swapon /swapfile
 export NODE_OPTIONS="--max-old-space-size=512"
 npm run build
 
-# 3. Alternative: Build locally and upload
+# 3. Alternative: Build locally and upload (RECOMMENDED for VMs)
 # Build on your local machine, then upload dist/ folder
+# Use the provided upload scripts:
+
+# Windows Batch:
+# 1. Edit upload-to-droplet.bat and set your droplet IP
+# 2. Double-click to run
+
+# Windows PowerShell:
+# .\upload-to-droplet.ps1 -DropletIP YOUR_DROPLET_IP
+
+# Manual upload:
 scp -r dist/ streamin@YOUR_DROPLET_IP:/home/streamin/StreamIn/
 
 # 4. Check system resources during build

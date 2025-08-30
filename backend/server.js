@@ -9,6 +9,7 @@ const { v4: uuidv4 } = require("uuid");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+const path = require("path");
 
 // Middleware
 app.use(helmet());
@@ -16,7 +17,7 @@ app.use(
   cors({
     origin:
       process.env.NODE_ENV === "production"
-        ? ["https://yourdomain.com"]
+        ? ["http://159.89.137.41", "http://localhost:3000"]
         : ["http://localhost:3000", "http://localhost:5173"],
   })
 );
@@ -350,6 +351,17 @@ app.get("/api/admin/stats/realtime", async (req, res) => {
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "OK", timestamp: new Date().toISOString() });
 });
+
+// Serve static files from the dist folder (React frontend)
+if (process.env.NODE_ENV === "production") {
+  // Serve static files
+  app.use(express.static(path.join(__dirname, "../dist")));
+  
+  // Handle React Router - serve index.html for all routes
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../dist", "index.html"));
+  });
+}
 
 // Clean up inactive sessions periodically
 setInterval(() => {
