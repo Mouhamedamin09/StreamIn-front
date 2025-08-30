@@ -66,7 +66,7 @@ VITE_ANALYTICS_URL=https://your-custom-api.com
 ```
 /home/streamin/StreamIn/
 ├── index.html              # Main HTML file
-├── assets/                 # CSS, JS, and other assets
+├── assets/                 # CSS, JS, and other assets hey what u want
 ├── sreamIn.png            # Dark mode logo
 ├── streamIn-dark.png      # Light mode logo
 ├── play.png               # Play button icon
