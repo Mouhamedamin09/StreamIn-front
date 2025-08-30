@@ -14,11 +14,211 @@
     />
 
     <title>StreamIn</title>
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4036681955310077"
-      crossorigin="anonymous"
-    ></script>
+    <!-- Advanced Ad Blocking Script - Safe and Non-Intrusive -->
+    <script>
+      (function () {
+        "use strict";
+
+        console.log("🚫 StreamIn Advanced Ad Blocker: Initializing...");
+
+        // Block common ad networks and domains
+        const blockedDomains = [
+          "doubleclick.net",
+          "googlesyndication.com",
+          "googleadservices.com",
+          "facebook.com",
+          "amazon-adsystem.com",
+          "adnxs.com",
+          "googletagmanager.com",
+          "google-analytics.com",
+          "popads.net",
+          "popundertotal.com",
+          "popunder.com",
+          "adclick.g.doubleclick.net",
+        ];
+
+        // Block popup ads and redirects
+        const originalOpen = window.open;
+        window.open = function (...args) {
+          const url = args[0];
+          if (url && blockedDomains.some((domain) => url.includes(domain))) {
+            console.log("🚫 Blocked popup to:", url);
+            return null;
+          }
+          return originalOpen.apply(this, args);
+        };
+
+        // Block iframe navigation to ad sites
+        const originalCreateElement = document.createElement;
+        document.createElement = function (tagName) {
+          const element = originalCreateElement.call(this, tagName);
+          if (tagName.toLowerCase() === "iframe") {
+            // Monitor iframe src changes
+            const originalSetAttribute = element.setAttribute;
+            element.setAttribute = function (name, value) {
+              if (
+                name === "src" &&
+                blockedDomains.some((domain) => value.includes(domain))
+              ) {
+                console.log("🚫 Blocked iframe src:", value);
+                return;
+              }
+              return originalSetAttribute.call(this, name, value);
+            };
+          }
+          return element;
+        };
+
+        // Function to remove ad elements
+        function removeAdElements() {
+          // Remove elements with ad-related attributes
+          const adSelectors = [
+            '[id*="ad"]',
+            '[class*="ad"]',
+            "[data-ad]",
+            "[data-ads]",
+            '[id*="popup"]',
+            '[class*="popup"]',
+            '[id*="banner"]',
+            '[class*="banner"]',
+            '[id*="sponsor"]',
+            '[class*="sponsor"]',
+          ];
+
+          adSelectors.forEach((selector) => {
+            try {
+              const elements = document.querySelectorAll(selector);
+              elements.forEach((el) => {
+                if (el && !el.dataset.streaminProtected) {
+                  el.style.display = "none";
+                  el.dataset.streaminProtected = "true";
+                  console.log("🚫 Hidden ad element:", selector);
+                }
+              });
+            } catch (e) {
+              // Safe error handling
+            }
+          });
+
+          // Remove popup overlays
+          const popupOverlays = document.querySelectorAll(
+            'div[style*="position: fixed"], div[style*="position:fixed"]'
+          );
+          popupOverlays.forEach((overlay) => {
+            if (overlay && !overlay.dataset.streaminProtected) {
+              const computedStyle = window.getComputedStyle(overlay);
+              if (computedStyle.zIndex > 1000 || overlay.style.zIndex > 1000) {
+                overlay.remove();
+                overlay.dataset.streaminProtected = "true";
+                console.log("🚫 Removed popup overlay");
+              }
+            }
+          });
+        }
+
+        // Function to close popup windows
+        function closePopupAds() {
+          try {
+            // Close windows that might be popup ads
+            if (window.opener && window.opener !== window) {
+              const currentUrl = window.location.href;
+              if (
+                blockedDomains.some((domain) => currentUrl.includes(domain))
+              ) {
+                window.close();
+                console.log("🚫 Closed popup ad window");
+              }
+            }
+          } catch (e) {
+            // Safe error handling
+          }
+        }
+
+        // Function to block ad-related messages
+        function blockAdMessages() {
+          window.addEventListener("message", function (event) {
+            if (event.data && typeof event.data === "string") {
+              if (
+                event.data.includes("ad") ||
+                event.data.includes("popup") ||
+                event.data.includes("redirect") ||
+                event.data.includes("click")
+              ) {
+                event.preventDefault();
+                event.stopPropagation();
+                console.log("🚫 Blocked ad message:", event.data);
+                return false;
+              }
+            }
+          });
+        }
+
+        // Function to protect video players
+        function protectVideoPlayers() {
+          const videoContainers = document.querySelectorAll(
+            'iframe[title*="StreamIn player"]'
+          );
+          videoContainers.forEach((container) => {
+            if (container && !container.dataset.streaminProtected) {
+              // Add protection attributes
+              container.setAttribute(
+                "sandbox",
+                "allow-scripts allow-same-origin allow-forms allow-presentation"
+              );
+              container.setAttribute("referrerpolicy", "no-referrer");
+              container.dataset.streaminProtected = "true";
+
+              // Block right-click ads
+              container.addEventListener("contextmenu", function (e) {
+                e.preventDefault();
+              });
+
+              console.log("🚫 Protected video player");
+            }
+          });
+        }
+
+        // Initialize ad blocking
+        function initAdBlocking() {
+          // Run immediately
+          removeAdElements();
+          closePopupAds();
+          protectVideoPlayers();
+
+          // Set up continuous monitoring
+          setInterval(removeAdElements, 1000); // Check every second
+          setInterval(protectVideoPlayers, 2000); // Check every 2 seconds
+
+          // Monitor DOM changes
+          const observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+              if (mutation.type === "childList") {
+                setTimeout(removeAdElements, 100);
+              }
+            });
+          });
+
+          observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+          });
+
+          console.log(
+            "🚫 StreamIn Advanced Ad Blocker: Active and monitoring!"
+          );
+        }
+
+        // Start ad blocking when DOM is ready
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", initAdBlocking);
+        } else {
+          initAdBlocking();
+        }
+
+        // Also run when window loads
+        window.addEventListener("load", initAdBlocking);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
