@@ -71,7 +71,7 @@ VITE_ANALYTICS_URL=https://your-custom-api.com
 ├── streamIn-dark.png      # Light mode logo
 ├── play.png               # Play button icon
 ├── favicon.ico            # Favicon
-└── ads.txt                # Ad verification file
+
 ```
 
 ## 🚨 Troubleshooting
