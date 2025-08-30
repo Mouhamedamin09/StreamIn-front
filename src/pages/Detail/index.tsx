@@ -24,7 +24,7 @@ const tmdbApi = {
 const Detail = () => {
   const { category, id } = useParams();
   const [show, setShow] = useState<Boolean>(false);
-  const [watchOption, setWatchOption] = useState("server1");
+  const [watchOption, setWatchOption] = useState("server3");
   const [selectedSeason, setSelectedSeason] = useState(1);
   const [selectedEpisode, setSelectedEpisode] = useState(1);
   const [seasons, setSeasons] = useState([]);
@@ -237,13 +237,21 @@ const Detail = () => {
                   ? "Select a season and episode to start watching"
                   : "Choose your preferred streaming server"}
               </p>
+              <p className="text-green-400 text-xs mt-1">
+                ✨ Default server (Vidsrc.cc) is ad-free and recommended
+              </p>
             </div>
 
             {/* Server Selection - Top Right */}
             <div className="w-full lg:w-72">
-              <label className="block text-gray-300 text-sm font-semibold mb-3">
-                Streaming Server
-              </label>
+              <div className="mb-3">
+                <label className="block text-gray-300 text-sm font-semibold mb-2">
+                  Streaming Server
+                </label>
+                <p className="text-xs text-gray-400 mb-2">
+                  💡 Top 3 servers are ad-free. Others may have ads.
+                </p>
+              </div>
               <select
                 className="w-full bg-gray-800 text-white border-2 border-gray-600 rounded-xl px-4 py-3 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 hover:border-gray-500"
                 value={watchOption}
@@ -253,21 +261,21 @@ const Detail = () => {
                   setWatchOption(newServer);
                 }}
               >
-                <option value="server1">🚀 VidLink - Recommended</option>
-                <option value="server2">⚡ Smashy Stream</option>
-                <option value="server3">🎬 Vidsrc.cc</option>
-                <option value="server4">📺 Vidsrc.dev</option>
-                <option value="server5">🔗 2embed</option>
-                <option value="server6">🌟 Vidsrc.icu</option>
-                <option value="server7">💫 Vidsrc.xyz</option>
-                <option value="server8">🌊 Vidsrc.nl</option>
-                <option value="server9">🎭 Moviee.tv</option>
-                <option value="server10">🔮 Embed.su</option>
-                <option value="server11">⚙️ Autoembed</option>
-                <option value="server12">🎪 Moviesapi</option>
-                <option value="server13">🎯 123embed</option>
-                <option value="server14">🚀 Flicky</option>
-                <option value="server15">🎬 Rgshows</option>
+                <option value="server3">🎬 Vidsrc.cc - Ad-Free & Recommended</option>
+                <option value="server4">📺 Vidsrc.dev - Ad-Free Alternative</option>
+                <option value="server8">🌊 Vidsrc.nl - Clean Player</option>
+                <option value="server6">🌟 Vidsrc.icu - Minimal Ads</option>
+                <option value="server7">💫 Vidsrc.xyz - Good Quality</option>
+                <option value="server1">🚀 VidLink - Backup Option</option>
+                <option value="server2">⚡ Smashy Stream - Backup Option</option>
+                <option value="server5">🔗 2embed - Backup Option</option>
+                <option value="server9">🎭 Moviee.tv - Backup Option</option>
+                <option value="server10">🔮 Embed.su - Backup Option</option>
+                <option value="server11">⚙️ Autoembed - Backup Option</option>
+                <option value="server12">🎪 Moviesapi - Backup Option</option>
+                <option value="server13">🎯 123embed - Backup Option</option>
+                <option value="server14">🚀 Flicky - Backup Option</option>
+                <option value="server15">🎬 Rgshows - Backup Option</option>
               </select>
             </div>
           </div>
