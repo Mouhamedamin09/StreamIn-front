@@ -197,9 +197,19 @@ nano .env
 # MONGODB_URI=your-mongodb-connection-string
 # ALLOWED_ORIGINS=http://YOUR_DROPLET_IP
 
-# Go back to root and setup Frontend
+# Go back to root and setup Frontend (optimized for VM)
 cd ..
-npm install
+
+# Clear npm cache and optimize for VM
+npm cache clean --force
+npm config set maxsockets 1
+npm config set fetch-retries 3
+
+# Install dependencies with reduced parallelism
+npm install --maxsockets=1 --no-optional
+
+# Build with memory optimization
+export NODE_OPTIONS="--max-old-space-size=512"
 npm run build
 
 # Verify dist folder was created
@@ -568,6 +578,30 @@ free -m
 
 # App performance
 pm2 monit
+```
+
+### VM-Specific Build Troubleshooting
+
+If the build freezes on `react-icons` or other large dependencies:
+
+```bash
+# 1. Increase swap space (if low on RAM)
+sudo fallocate -l 1G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+# 2. Build with minimal memory usage
+export NODE_OPTIONS="--max-old-space-size=512"
+npm run build
+
+# 3. Alternative: Build locally and upload
+# Build on your local machine, then upload dist/ folder
+scp -r dist/ streamin@YOUR_DROPLET_IP:/home/streamin/StreamIn/
+
+# 4. Check system resources during build
+htop  # Monitor CPU/Memory usage
+free -h  # Check available memory
 ```
 
 ---

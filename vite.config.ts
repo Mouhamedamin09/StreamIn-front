@@ -14,14 +14,30 @@ export default defineConfig({
   build: {
     outDir: "dist",
     sourcemap: false,
+    minify: "esbuild", // Faster than terser
+    target: "es2015", // Better compatibility
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ["react", "react-dom"],
           router: ["react-router-dom"],
+          icons: ["react-icons"], // Separate chunk for icons
         },
+        // Optimize for VM resources
+        chunkFileNames: "assets/[name]-[hash].js",
+        entryFileNames: "assets/[name]-[hash].js",
+        assetFileNames: "assets/[name]-[hash].[ext]",
       },
+      // Optimize for memory usage
+      maxParallelFileOps: 2,
     },
+    // Reduce memory usage
+    chunkSizeWarningLimit: 1000,
+  },
+  // Optimize for VM environment
+  optimizeDeps: {
+    include: ["react", "react-dom", "react-router-dom"],
+    exclude: ["react-icons"], // Exclude icons from dependency optimization
   },
   server: {
     proxy: {
