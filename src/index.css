@@ -336,79 +336,29 @@ body {
   height: 100%;
 }
 
-/* Advanced Ad Blocking CSS */
-@layer components {
-  /* Prevent ad overlays */
-  iframe {
-    position: relative !important;
-    z-index: 1 !important;
-  }
+/* Video Player Ad Blocking - Only Targets Streaming Servers */
+iframe[title*="StreamIn player"] {
+  /* Protect video players from ad overlays */
+  position: relative;
+  z-index: 1;
+}
 
-  /* Block ad popups */
-  iframe[src*="ad"] {
-    display: none !important;
-  }
+/* Block ads that appear within video players */
+iframe[title*="StreamIn player"] iframe[src*="ad"],
+iframe[title*="StreamIn player"] iframe[src*="popup"],
+iframe[title*="StreamIn player"] iframe[src*="redirect"] {
+  display: none !important;
+}
 
-  /* Prevent ad redirects */
-  iframe[src*="redirect"] {
-    display: none !important;
-  }
+/* Block ad overlays on video players */
+.video-player-container {
+  position: relative;
+  overflow: hidden;
+}
 
-  /* Block suspicious iframe content */
-  iframe[src*="popup"] {
-    display: none !important;
-  }
-
-  /* Ensure video players work normally */
-  iframe[title*="StreamIn player"] {
-    pointer-events: auto !important;
-    user-select: auto !important;
-  }
-
-  /* Block ad-related elements */
-  [id*="ad"],
-  [class*="ad"],
-  [data-ad],
-  [data-ads],
-  [id*="popup"],
-  [class*="popup"],
-  [id*="banner"],
-  [class*="banner"],
-  [id*="sponsor"],
-  [class*="sponsor"] {
-    display: none !important;
-  }
-
-  /* Prevent ad overlays on video players */
-  .video-player-container {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .video-player-container::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9999;
-    pointer-events: none;
-  }
-
-  /* Block popup overlays */
-  div[style*="position: fixed"],
-  div[style*="position:fixed"] {
-    display: none !important;
-  }
-
-  /* Block ad iframes */
-  iframe[src*="doubleclick"],
-  iframe[src*="googlesyndication"],
-  iframe[src*="googleadservices"],
-  iframe[src*="facebook"],
-  iframe[src*="amazon-adsystem"],
-  iframe[src*="adnxs"] {
-    display: none !important;
-  }
+/* Prevent ad popups from video players */
+.video-player-container iframe[src*="doubleclick"],
+.video-player-container iframe[src*="googlesyndication"],
+.video-player-container iframe[src*="googleadservices"] {
+  display: none !important;
 }
