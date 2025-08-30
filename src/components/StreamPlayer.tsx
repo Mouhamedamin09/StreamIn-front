@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import Hls from "hls.js/dist/hls.min.js";
+import Hls from "hls.js";
 import { FaChevronLeft, FaChevronRight, FaTimes } from "react-icons/fa";
 
 export interface StreamPlayerProps {

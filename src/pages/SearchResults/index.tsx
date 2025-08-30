@@ -50,7 +50,8 @@ const SearchResults = () => {
       );
 
       if (!response.ok) {
-        throw new Error("Search failed");
+        console.error("Search failed");
+        return;
       }
 
       const data = await response.json();

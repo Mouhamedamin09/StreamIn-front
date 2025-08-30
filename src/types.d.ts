@@ -8,12 +8,17 @@ export interface INavLink extends ITheme {
 }
 
 export interface IMovie {
-  id: string;
+  id: string | number;
   poster_path: string;
-  original_title: string;
-  name: string;
-  overview: string;
-  backdrop_path: string;
+  original_title?: string;
+  title?: string;
+  name?: string;
+  overview?: string;
+  backdrop_path?: string;
+  release_date?: string;
+  first_air_date?: string;
+  vote_average?: number;
+  media_type?: "movie" | "tv";
 }
 
 export interface IAnime {

@@ -113,34 +113,11 @@ export const tmdbApi = createApi({
     }),
 
     getAnimeDetails: builder.query({
-      async queryFn(id: string) {
-        try {
-          // Try AniList first
-          const anilistRes = await fetch(
-            `https://api-consumet-ten-delta.vercel.app/meta/anilist/info/${id}`
-          );
-          if (anilistRes.ok) {
-            const anilistData = await anilistRes.json();
-            return { data: anilistData };
-          }
-          // If AniList fails, try MAL
-          const malRes = await fetch(
-            `https://api-consumet-ten-delta.vercel.app/meta/mal/info/${id}`
-          );
-          if (malRes.ok) {
-            const malData = await malRes.json();
-            return { data: malData };
-          }
-          // If both fail, return error
-          return {
-            error: {
-              message: "Unable to fetch anime details from AniList or MAL.",
-            },
-          };
-        } catch (error) {
-          return { error: { message: "Anime details fetch failed." } };
-        }
-      },
+      query: (id: string) =>
+        `https://api-consumet-ten-delta.vercel.app/meta/anilist/info/${id}`,
+      transformErrorResponse: (response: any) => ({
+        message: `Anime Details API Error: ${response.status} - Unable to fetch anime details`,
+      }),
     }),
   }),
 });

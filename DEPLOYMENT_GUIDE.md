@@ -180,27 +180,39 @@ usermod -aG sudo streamin
 # Switch to app user
 su - streamin
 
-# Clone repository
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+# Clone repository (replace with your actual repo URL)
+git clone https://github.com/your-username/your-repo-name.git StreamIn
+cd StreamIn
 
-# Setup Backend
+# Setup Backend first
 cd backend
 npm install --production
 cp .env.example .env
-# Edit .env with your production values
-nano .env
 
-# Setup Frontend
+# Edit backend .env with your production values
+nano .env
+# Add these values:
+# NODE_ENV=production
+# PORT=8080
+# MONGODB_URI=your-mongodb-connection-string
+# ALLOWED_ORIGINS=http://YOUR_DROPLET_IP
+
+# Go back to root and setup Frontend
 cd ..
 npm install
 npm run build
+
+# Verify dist folder was created
+ls -la dist/
 
 # Start backend with PM2
 cd backend
 pm2 start server.js --name "streamin-backend"
 pm2 save
 pm2 startup
+
+# Go back to root directory
+cd /home/streamin/StreamIn
 ```
 
 ### Step 4: Configure Nginx
@@ -214,18 +226,24 @@ sudo nano /etc/nginx/sites-available/streamin
 
 ```nginx
 server {
-    listen 80;
-    server_name your-domain.com www.your-domain.com;
+    listen 80 default_server;
+    server_name _;
 
-    # Frontend (React app)
+    # Frontend (React app) - THIS SERVES YOUR WEBSITE
     location / {
-        root /home/streamin/your-repo-name/dist;
+        root /home/streamin/StreamIn/dist;
         try_files $uri $uri/ /index.html;
 
+        # Add headers for better performance
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "no-referrer-when-downgrade" always;
+
         # Caching for static assets
-        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
             expires 1y;
             add_header Cache-Control "public, immutable";
+            add_header Access-Control-Allow-Origin "*";
         }
     }
 
@@ -250,13 +268,24 @@ server {
 ```
 
 ```bash
-# Enable site
-sudo ln -s /etc/nginx/sites-available/streamin /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl reload nginx
+# Remove default Nginx site (IMPORTANT!)
+sudo rm /etc/nginx/sites-enabled/default
 
-# Get SSL certificate
-sudo certbot --nginx -d your-domain.com -d www.your-domain.com
+# Enable our site
+sudo ln -s /etc/nginx/sites-available/streamin /etc/nginx/sites-enabled/
+
+# Test Nginx configuration
+sudo nginx -t
+
+# Restart Nginx
+sudo systemctl restart nginx
+
+# Check if everything is running
+sudo systemctl status nginx
+pm2 status
+
+# Your website will be accessible at: http://YOUR_DROPLET_IP
+# Example: http://134.122.123.456
 ```
 
 ### Step 5: Setup Firewall
@@ -266,7 +295,50 @@ sudo certbot --nginx -d your-domain.com -d www.your-domain.com
 sudo ufw allow OpenSSH
 sudo ufw allow 'Nginx Full'
 sudo ufw enable
+
+# Check open ports
+sudo ufw status
 ```
+
+### Step 6: Verify Everything Works
+
+```bash
+# Check all services are running
+sudo systemctl status nginx
+pm2 status
+
+# Test your website
+curl http://localhost
+# Should return HTML content
+
+# Test backend API
+curl http://localhost/api/health
+# Should return backend response
+
+# Check logs if something's wrong
+sudo tail -f /var/log/nginx/error.log
+pm2 logs streamin-backend
+```
+
+## 🎉 **Access Your Complete Website**
+
+Your **StreamIn website** will be accessible at:
+
+```
+http://YOUR_DROPLET_IP
+```
+
+### **What You'll See:**
+
+✅ **Frontend:** Complete React website with movies, TV shows, search, etc.  
+✅ **Backend:** Analytics working, all API calls functional  
+✅ **Streaming:** All video streaming features working
+
+### **Example URLs:**
+
+- **Main Website:** `http://134.122.123.456`
+- **Admin Dashboard:** `http://134.122.123.456/admin`
+- **API Health Check:** `http://134.122.123.456/api/health`
 
 ---
 

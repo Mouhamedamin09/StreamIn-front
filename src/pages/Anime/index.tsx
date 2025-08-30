@@ -64,7 +64,8 @@ const Anime = () => {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to fetch anime");
+        console.error("Failed to fetch anime");
+        return;
       }
 
       const data = await response.json();

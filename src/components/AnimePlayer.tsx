@@ -1,11 +1,4 @@
 import React, { useState } from "react";
-import { MediaPlayer, MediaProvider } from "@vidstack/react";
-import {
-  defaultLayoutIcons,
-  DefaultVideoLayout,
-} from "@vidstack/react/player/layouts/default";
-import "@vidstack/react/player/styles/default/theme.css";
-import "@vidstack/react/player/styles/default/layouts/video.css";
 import { FaChevronLeft, FaChevronRight, FaTimes } from "react-icons/fa";
 
 export interface AnimePlayerProps {
@@ -82,26 +75,16 @@ const AnimePlayer: React.FC<AnimePlayerProps> = ({
           </button>
         </div>
         <div className="w-full aspect-video relative">
-          <MediaPlayer
-            title={title}
-            src={currentSource.url}
-            poster={posterSrc}
-            crossorigin
-            className="w-full h-full"
-          >
-            <MediaProvider>
-              {streamingData.subtitles?.map((subtitle: any) => (
-                <track
-                  key={subtitle.lang}
-                  kind="subtitles"
-                  src={subtitle.url}
-                  label={subtitle.lang}
-                  srcLang={subtitle.lang}
-                />
-              ))}
-            </MediaProvider>
-            <DefaultVideoLayout icons={defaultLayoutIcons} />
-          </MediaPlayer>
+          <div className="bg-black rounded-lg">
+            <iframe
+              src={currentSource.url}
+              title={title}
+              className="w-full h-full rounded-lg"
+              style={{ minHeight: "400px" }}
+              allowFullScreen
+              frameBorder="0"
+            />
+          </div>
         </div>
       </div>
     </div>

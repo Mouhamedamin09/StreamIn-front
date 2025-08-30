@@ -21,7 +21,9 @@ const MovieCard = ({
           height={300}
           width={200}
           src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-          alt={movie.original_title}
+          alt={
+            movie.original_title || movie.title || movie.name || "Movie poster"
+          }
           className="w-full h-full object-cover rounded-lg drop-shadow-md shadow-md group-hover:shadow-none group-hover:drop-shadow-none transition-all duration-300 ease-in-out"
           effect="zoomIn"
         />
@@ -36,7 +38,9 @@ const MovieCard = ({
       </Link>
 
       <h4 className="dark:text-gray-300 text-center cursor-default text-xs sm:text-sm md:text-base font-medium mt-2 px-1 line-clamp-2">
-        {(title?.length > 50 ? title.split(":")[0] : title) || name}
+        {title && title.length > 50
+          ? title.split(":")[0]
+          : title || name || "Untitled"}
       </h4>
     </div>
   );

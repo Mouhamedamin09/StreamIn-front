@@ -47,9 +47,9 @@ const HeroSlide = ({ movie }: { movie: IMovie }) => {
           {title}
         </m.h2>
         <m.p variants={fadeDown} className={paragraph}>
-          {overview.length > 180
+          {overview && overview.length > 180
             ? `${overview.substring(0, 180)}...`
-            : overview}
+            : overview || "No description available"}
         </m.p>
 
         <m.div
@@ -79,7 +79,11 @@ const HeroSlide = ({ movie }: { movie: IMovie }) => {
         </m.div>
       </m.div>
 
-      <Poster title={title} posterPath={posterPath} className="mr-auto" />
+      <Poster
+        title={title || "Movie"}
+        posterPath={posterPath}
+        className="mr-auto"
+      />
     </div>
   );
 };
